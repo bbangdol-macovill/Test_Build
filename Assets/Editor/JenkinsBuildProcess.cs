@@ -20,7 +20,7 @@ namespace BuildProcessor
 {
     public class JenkinsBuildProcessor
     {
-        public const string AddressableBuilderName = "Oz Addressable Build";
+        public const string AddressableBuilderName = "Addressable Build";
 
         private class EditorCoroutine
         {
@@ -178,10 +178,10 @@ namespace BuildProcessor
         public static void OnAndroidBuildFinish(BuildTarget target, string pathToBuildProject)
         {
             System.Console.WriteLine("OnAndroidBuildFinish!!");
-            if (target == BuildTarget.Android)
-            {
-                EditorCoroutine.Start(UploadApkAsync(pathToBuildProject));
-            }
+            //if (target == BuildTarget.Android)
+            //{
+            //    EditorCoroutine.Start(UploadApkAsync(pathToBuildProject));
+            //}
         }
 
         private static IEnumerator UploadApkAsync(string pathToBuildProject)

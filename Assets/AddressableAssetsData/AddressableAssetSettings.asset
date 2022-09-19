@@ -26,7 +26,7 @@ MonoBehaviour:
   m_NonRecursiveBuilding: 1
   m_CCDEnabled: 0
   m_maxConcurrentWebRequests: 500
-  m_ContiguousBundles: 1
+  m_ContiguousBundles: 0
   m_StripUnityVersionFromBundleBuild: 0
   m_DisableVisibleSubAssetRepresentations: 0
   m_ShaderBundleNaming: 0
@@ -38,8 +38,8 @@ MonoBehaviour:
   m_RemoteCatalogLoadPath:
     m_Id: b146837cf00b73540abd16c9724ffce1
   m_ContentStateBuildPath: 
-  m_BuildAddressablesWithPlayerBuild: 0
-  m_overridePlayerVersion: 
+  m_BuildAddressablesWithPlayerBuild: 2
+  m_overridePlayerVersion: dev
   m_GroupAssets:
   - {fileID: 11400000, guid: 254100deb83aa6741bcb25c0316df689, type: 2}
   - {fileID: 11400000, guid: 6d4ba8fc9b8c66247b8237c01e50aa8b, type: 2}
@@ -55,7 +55,7 @@ MonoBehaviour:
       m_ProfileName: Default
       m_Values:
       - m_Id: e25ed55acd4dafb42bf3695bd43c63bd
-        m_Value: https://oz-patch.s3.ap-northeast-2.amazonaws.com/[BuildTarget]
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: f06c3e0c63b16154fb6e8c3c434814fe
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: c2ff14e247a099249805b192f51b95c3
@@ -63,7 +63,7 @@ MonoBehaviour:
       - m_Id: 9a1fe854443974346a7394dd6e126b15
         m_Value: ServerData/[BuildTarget]
       - m_Id: b146837cf00b73540abd16c9724ffce1
-        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+        m_Value: https://oz-patch.s3.ap-northeast-2.amazonaws.com/Test/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: e25ed55acd4dafb42bf3695bd43c63bd
       m_Name: BuildTarget

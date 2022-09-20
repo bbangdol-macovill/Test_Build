@@ -10,16 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Test
+  m_Name: Sphere
   m_EditorClassIdentifier: 
-  m_GroupName: Test
+  m_GroupName: Sphere
   m_Data:
     m_SerializedData: []
-  m_GUID: 805c7f42ea98d7348969868b4d4740dd
-  m_SerializeEntries: []
+  m_GUID: d739baec232f8d84b817f4b71addde90
+  m_SerializeEntries:
+  - m_GUID: 25f8792d9a5244c40bc6e167122718af
+    m_Address: Assets/AssetBundle/Sphere/Red.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sphere
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 729938038e7a45c40822b26edcb7f4ab, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 2d183a192e1a41e46b1dcbbc76639736, type: 2}
-    - {fileID: 11400000, guid: fa55a06e54f773e419bbd23e4c4ea022, type: 2}
+    - {fileID: 11400000, guid: c6883cbefc988d8428954dc5ab343ed1, type: 2}
+    - {fileID: 11400000, guid: cbaca55fd386b7d41a8544cfe4e292ee, type: 2}

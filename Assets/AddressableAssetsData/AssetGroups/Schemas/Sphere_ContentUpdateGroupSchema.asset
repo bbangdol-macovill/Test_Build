@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: Test_ContentUpdateGroupSchema
+  m_Name: Sphere_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: d0b8c0b4753904f428cc37bb4c42e23b, type: 2}
+  m_Group: {fileID: 11400000, guid: e5f7c45e1a37d024eaf49d473651cb2d, type: 2}
   m_StaticContent: 0

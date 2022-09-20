@@ -17,8 +17,23 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 9a4bc76ab38d9604999a61d19c248a02
   m_SerializeEntries:
-  - m_GUID: 9d42b366e3ac4a54f9a458dc3994f05b
-    m_Address: Assets/AssetBundle/Materials
+  - m_GUID: 626bc3d9188d95e4eb7a29b3836db19f
+    m_Address: Assets/AssetBundle/Materials/Balck.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Materials
+  - m_GUID: 3680232b79762724fa1717d5be2ee81e
+    m_Address: Assets/AssetBundle/Materials/Blue.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Materials
+  - m_GUID: c6a38942c342084479a8577206511386
+    m_Address: Assets/AssetBundle/Materials/Grren.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Materials
+  - m_GUID: dbc47851be2da6f40941a30b5a945cb0
+    m_Address: Assets/AssetBundle/Materials/Red.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - Materials

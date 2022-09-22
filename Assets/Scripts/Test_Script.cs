@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -114,9 +115,8 @@ public class Test_Script : Singleton<Test_Script>
         process.StartInfo = processStartInfo;
         process.Start();
 
-        process.StandardInput.WriteLine("git add .");
-        process.StandardInput.WriteLine("git commit -m " + Application.version);
-        process.StandardInput.WriteLine("git push origin develop");
+        process.StandardInput.WriteLine("aws s3 rm s3://oz-patch/dev/Android/" + 10 + "--recursive --exclude=\"*\" --include=\"" + 10 + "/*.*\"");
+        process.StandardInput.WriteLine("s3 rm s3://oz-patch/dev --recursive --exclude=\"*\" --include=\"Android/*.*\"");
         process.StandardInput.Close();
 
         string resultValue = process.StandardOutput.ReadToEnd();

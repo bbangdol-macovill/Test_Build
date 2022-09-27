@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// 테스트용. gitIgnore 추가.
+/// ????????. gitIgnore ????.
 /// </summary>
 public class Test_Script : Singleton<Test_Script>
 {
@@ -49,6 +49,7 @@ public class Test_Script : Singleton<Test_Script>
 #elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         return "StandaloneWindows";
 #endif
+        return string.Empty;
     }
     #endregion
 
@@ -70,11 +71,11 @@ public class Test_Script : Singleton<Test_Script>
         process.StartInfo = startInfo;
         process.Start();
 
-        //cmd에 보낼 정보.
+        //cmd?? ???? ????.
         process.StandardInput.Write(@"dir/w" + System.Environment.NewLine);
         process.StandardInput.Close();
 
-        //cmd에서 읽어올 정보.
+        //cmd???? ?????? ????.
         string resultValue = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
         process.Close();

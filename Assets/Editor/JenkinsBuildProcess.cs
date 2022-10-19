@@ -87,6 +87,54 @@ namespace BuildProcessor
             System.Console.WriteLine("End Of BuildAnd");
         }
 
+        [MenuItem("Tools/CI/CMDTest")]
+        public static void CMDTest()
+        {
+            System.Diagnostics.Process process = new();
+            //System.Diagnostics.ProcessStartInfo processStartInfo = new();
+
+            string resultValue = string.Empty;
+
+            process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.Exited += delegate (object sender, System.EventArgs e) {
+                UnityEngine.Debug.LogError(e.ToString());
+            };
+
+            process.StartInfo.FileName = @"cmd";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            process.StartInfo.Arguments = "/c git add Assets/AddressableAssetsData/*";
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Add : " + resultValue);
+            process.Close();
+
+            string arguments = "git commit -m JenkinsAndroidBuild_develop_" + PlayerSettings.Android.bundleVersionCode.ToString();
+            process.StartInfo.Arguments = "/c " + arguments;
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Commit : " + resultValue);
+            process.Close();
+
+            process.StartInfo.Arguments = "/c git push origin develop";
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Push : " + resultValue);
+            process.Close();
+        }
+
         private static string AddBuildVersion(BuildTarget buildTarget)
         {
             CheckBuildTarget(buildTarget);

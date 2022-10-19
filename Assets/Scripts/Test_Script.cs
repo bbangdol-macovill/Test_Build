@@ -21,31 +21,12 @@ public class Test_Script : Singleton<Test_Script>
             System.Diagnostics.Process process = new();
             System.Diagnostics.ProcessStartInfo processStartInfo = new();
 
-            processStartInfo.FileName = @"cmd";
-            processStartInfo.CreateNoWindow = true;
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.RedirectStandardOutput = true;
-            processStartInfo.RedirectStandardInput = true;
-            processStartInfo.RedirectStandardError = true;
-            processStartInfo.Arguments = "/c cd tools & Test1.bat";
-
-            process.StartInfo = processStartInfo;
-            process.Start();
-
-            string resultValue = process.StandardOutput.ReadToEnd();            
-
-            process.WaitForExit(1000 * 60 * 5);
-            Thread.Sleep(6000);
-            //process.Close();
-
-            UnityEngine.Debug.Log(resultValue);
-
-            Test_CMD2(process, processStartInfo);            
+            TestGitCommnad(process, processStartInfo);            
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            Test_Bat(new System.Diagnostics.Process(), new System.Diagnostics.ProcessStartInfo());
+            LogColor("Test2");
         }
     }
 
@@ -243,6 +224,54 @@ public class Test_Script : Singleton<Test_Script>
     public static void LogColor(string logString)
     {
         UnityEngine.Debug.Log("<color=lightblue>" + logString + "</color>");
+    }
+    #endregion
+
+    #region git add/commit/push
+    private void TestGitCommnad(System.Diagnostics.Process process, System.Diagnostics.ProcessStartInfo processStartInfo)
+    {
+        string resultValue = string.Empty;
+
+        process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.Exited += delegate (object sender, System.EventArgs e) {
+            UnityEngine.Debug.LogError(e.ToString());
+        };
+
+        processStartInfo.FileName = @"cmd";
+        processStartInfo.CreateNoWindow = true;
+        processStartInfo.UseShellExecute = false;
+        processStartInfo.RedirectStandardOutput = true;
+        processStartInfo.RedirectStandardInput = true;
+        processStartInfo.RedirectStandardError = true;        
+
+        process.StartInfo.Arguments = "/c git add Assets/AddressableAssetsData/*";
+        process.Start();
+        process.WaitForExit();
+        resultValue = process.StandardOutput.ReadToEnd();
+        UnityEngine.Debug.Log("Add : " + resultValue);
+        process.Close();
+
+        string arguments = "git commit -m JenkinsAndroidBuild_develop_" + PlayerSettings.Android.bundleVersionCode.ToString();
+        process.StartInfo.Arguments = "/c " + arguments;
+        process.Start();
+        process.WaitForExit();
+        resultValue = process.StandardOutput.ReadToEnd();
+        UnityEngine.Debug.Log("Commit : " + resultValue);
+        process.Close();
+
+        process.StartInfo.Arguments = "/c git push origin develop";
+        process.Start();
+        process.WaitForExit();
+        resultValue = process.StandardOutput.ReadToEnd();
+        UnityEngine.Debug.Log("Push : " + resultValue);
+        process.Close();
+
+        
     }
     #endregion
 }

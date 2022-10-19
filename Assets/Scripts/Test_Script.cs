@@ -1,7 +1,9 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,26 +16,36 @@ public class Test_Script : Singleton<Test_Script>
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            string url = serverURL + "dev/" + Test_GetPlatformString() + "/";
+            LogColor("Test1");
 
-            LogColor(url);
+            System.Diagnostics.Process process = new();
+            System.Diagnostics.ProcessStartInfo processStartInfo = new();
+
+            processStartInfo.FileName = @"cmd";
+            processStartInfo.CreateNoWindow = true;
+            processStartInfo.UseShellExecute = false;
+            processStartInfo.RedirectStandardOutput = true;
+            processStartInfo.RedirectStandardInput = true;
+            processStartInfo.RedirectStandardError = true;
+            processStartInfo.Arguments = "/c cd tools & Test1.bat";
+
+            process.StartInfo = processStartInfo;
+            process.Start();
+
+            string resultValue = process.StandardOutput.ReadToEnd();            
+
+            process.WaitForExit(1000 * 60 * 5);
+            Thread.Sleep(6000);
+            //process.Close();
+
+            UnityEngine.Debug.Log(resultValue);
+
+            Test_CMD2(process, processStartInfo);            
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            Test_CMD(new System.Diagnostics.Process(), new System.Diagnostics.ProcessStartInfo());
-
-            //string path = System.Environment.CurrentDirectory + "/tool" + "DeleteAssetBundle.bat";
-            //UnityEngine.Debug.Log("DeleteAssetBundle : " + path);
-            //UnityEngine.Debug.Log("DeleteAssetBundle : " + System.Environment.CurrentDirectory);
-            //System.Diagnostics.Process process = new System.Diagnostics.Process();
-            //System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            //startInfo.FileName = "cmd.exe";
-            //startInfo.CreateNoWindow = true;
-            //startInfo.Arguments = "/c cd tool & DeleteAssetBundle.bat";
-            //process.StartInfo = startInfo;
-            //process.Start();
-            //process.WaitForExit();
+            Test_Bat(new System.Diagnostics.Process(), new System.Diagnostics.ProcessStartInfo());
         }
     }
 
@@ -86,25 +98,41 @@ public class Test_Script : Singleton<Test_Script>
     #region Batch Command.
     private static void Test_Bat(System.Diagnostics.Process process, System.Diagnostics.ProcessStartInfo processStartInfo)
     {
+        UnityEngine.Debug.Log("Start Test_Bat");
+
         processStartInfo.FileName = @"cmd";
         processStartInfo.CreateNoWindow = true;
         processStartInfo.UseShellExecute = false;
         processStartInfo.RedirectStandardOutput = true;
         processStartInfo.RedirectStandardInput = true;
         processStartInfo.RedirectStandardError = true;
-        processStartInfo.Arguments = "/c cd ../tools & Test.bat";
+        processStartInfo.Arguments = "/c cd ../tools & Test1.bat";
 
         process.StartInfo = processStartInfo;
+
+        process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.Exited += delegate (object sender, System.EventArgs e) {
+            UnityEngine.Debug.LogError(e.ToString());
+        };
         process.Start();
 
         process.WaitForExit();
         process.Close();
+
+        UnityEngine.Debug.Log("Finish Test_Bat");
     }
     #endregion
 
     #region CMD.
     private static void Test_CMD(System.Diagnostics.Process process, System.Diagnostics.ProcessStartInfo processStartInfo)
     {
+        LogColor("Test");
+
         processStartInfo.FileName = @"cmd";
         processStartInfo.CreateNoWindow = false;
         processStartInfo.UseShellExecute = false;
@@ -118,6 +146,57 @@ public class Test_Script : Singleton<Test_Script>
         process.StandardInput.WriteLine("aws s3 rm s3://oz-patch/dev/Android/" + 10 + "--recursive --exclude=\"*\" --include=\"" + 10 + "/*.*\"");
         process.StandardInput.WriteLine("s3 rm s3://oz-patch/dev --recursive --exclude=\"*\" --include=\"Android/*.*\"");
         process.StandardInput.Close();
+
+        string resultValue = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+        process.Close();
+
+        UnityEngine.Debug.Log(resultValue);
+    }
+    private static void Test_CMD1(System.Diagnostics.Process process, System.Diagnostics.ProcessStartInfo processStartInfo)
+    {
+        LogColor("Test1");
+
+        processStartInfo.FileName = @"cmd";
+        processStartInfo.CreateNoWindow = true;
+        processStartInfo.UseShellExecute = false;
+        processStartInfo.RedirectStandardOutput = true;
+        processStartInfo.RedirectStandardInput = true;
+        processStartInfo.RedirectStandardError = true;
+        processStartInfo.Arguments = "/c cd tools & Test.bat";
+
+        process.StartInfo = processStartInfo;
+        process.Start();
+
+        string resultValue = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+        process.Close();
+
+        UnityEngine.Debug.Log(resultValue);
+    }
+    private static void Test_CMD2(System.Diagnostics.Process process, System.Diagnostics.ProcessStartInfo processStartInfo)
+    {
+        LogColor("Test2");
+
+        processStartInfo.FileName = @"cmd";
+        processStartInfo.CreateNoWindow = true;
+        processStartInfo.UseShellExecute = false;
+        processStartInfo.RedirectStandardOutput = true;
+        processStartInfo.RedirectStandardInput = true;
+        processStartInfo.RedirectStandardError = true;
+        processStartInfo.Arguments = "/c cd tools & Test2.bat";
+
+        process.StartInfo = processStartInfo;
+        process.Start();
+
+        //process.StandardInput.WriteLine("1");
+        //process.StandardInput.WriteLine("2");
+        //process.StandardInput.WriteLine("3");
+        //process.StandardInput.WriteLine("4");
+        //process.StandardInput.WriteLine("5");
+        //process.StandardInput.Close();
 
         string resultValue = process.StandardOutput.ReadToEnd();
 

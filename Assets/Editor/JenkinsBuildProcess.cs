@@ -245,7 +245,6 @@ namespace BuildProcessor
                 case BuildTarget.iOS:
                     oldBuildNumber = PlayerSettings.iOS.buildNumber;
                     PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
-
                     AssetDatabase.SaveAssets();
                     return PlayerSettings.iOS.buildNumber;
             }

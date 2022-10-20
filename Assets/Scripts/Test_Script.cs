@@ -18,8 +18,7 @@ public class Test_Script : Singleton<Test_Script>
         {
             LogColor("Test1");
 
-            string oldBuildNumber = PlayerSettings.iOS.buildNumber;
-            PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
+            
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -274,18 +273,62 @@ public class Test_Script : Singleton<Test_Script>
     #endregion
 
     #region Tool Test.
-    [MenuItem("Tools/CI/Increase Version")]
+    [MenuItem("Tools/CI/Test")]
     public static void BuildIOS()
     {
-        string oldBuildNumber = PlayerSettings.iOS.buildNumber;
+        //string oldBuildNumber = PlayerSettings.iOS.buildNumber;
 
-        LogColor("Previous BuildNumber : " + oldBuildNumber);
+        //LogColor("Previous BuildNumber : " + oldBuildNumber);
 
-        PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
+        //PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
 
-        AssetDatabase.SaveAssets();
+        //AssetDatabase.SaveAssets();
 
-        LogColor("Current BuildNumber : " + PlayerSettings.iOS.buildNumber);
+        //LogColor("Current BuildNumber : " + PlayerSettings.iOS.buildNumber);
+
+        System.Diagnostics.Process process = new();
+        System.Diagnostics.ProcessStartInfo processStartInfo = new();
+
+        string reopenTerminal = $"tell application \\\"Terminal\\\" to if not (exists window 1) then reopen";
+        string activateTerminal = $"tell application \\\"Terminal\\\" to activate";
+        string changeDirectory = $"tell application \\\"Terminal\\\" to do script \\\"cd ~/Projects/Test_Project\\\" in window 1";
+        string addBundle = $"tell application \\\"Terminal\\\" to do script \\\"git add Assets/AddressableAssetsData/*.*\\\" in window 1";
+        string addSettings = $"tell application \\\"Terminal\\\" to do script \\\"git add ProjectSettings/ProjectSettings.asset\\\" in window 1";
+        string commit = $"tell application \\\"Terminal\\\" to do script \\\"git commit -m JenkinsiOSBuild_develop\\\" in window 1";
+        string push = $"tell application \\\"Terminal\\\" to do script \\\"git push origin develop\\\" in window 1";
+        string osaScript = $"osascript -e \'{reopenTerminal}\' -e \'{activateTerminal}\' -e \'{changeDirectory}\' -e \'{addBundle}\' -e \'{addSettings}\' -e \'{commit}\' -e \'{push}\'";
+        string argument = $" -c \"{osaScript}\"";
+
+        processStartInfo = new ProcessStartInfo
+        {
+            UseShellExecute = false,
+            FileName = "/bin/bash",
+            CreateNoWindow = false,
+            Arguments = argument,
+            RedirectStandardOutput = true,
+            RedirectStandardInput = true,
+            RedirectStandardError = true
+
+        };
+        process.StartInfo = processStartInfo;
+
+        process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+        {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
+        {
+            UnityEngine.Debug.LogError(e.Data);
+        };
+        process.Exited += delegate (object sender, System.EventArgs e)
+        {
+            UnityEngine.Debug.LogError(e.ToString());
+        };
+
+        process.Start();
+
+        process.WaitForExit();
+        process.Close();
     }
     #endregion
 }

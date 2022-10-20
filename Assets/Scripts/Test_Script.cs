@@ -283,6 +283,8 @@ public class Test_Script : Singleton<Test_Script>
 
         PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
 
+        AssetDatabase.SaveAssets();
+
         LogColor("Current BuildNumber : " + PlayerSettings.iOS.buildNumber);
     }
     #endregion

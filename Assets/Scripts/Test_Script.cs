@@ -14,17 +14,15 @@ public class Test_Script : Singleton<Test_Script>
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             LogColor("Test1");
 
-            System.Diagnostics.Process process = new();
-            System.Diagnostics.ProcessStartInfo processStartInfo = new();
-
-            TestGitCommnad(process, processStartInfo);            
+            string oldBuildNumber = PlayerSettings.iOS.buildNumber;
+            PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
         }
 
-        if (Input.GetKeyDown(KeyCode.F2))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             LogColor("Test2");
         }
@@ -272,6 +270,20 @@ public class Test_Script : Singleton<Test_Script>
         process.Close();
 
         
+    }
+    #endregion
+
+    #region Tool Test.
+    [MenuItem("Tools/CI/Increase Version")]
+    public static void BuildIOS()
+    {
+        string oldBuildNumber = PlayerSettings.iOS.buildNumber;
+
+        LogColor("Previous BuildNumber : " + oldBuildNumber);
+
+        PlayerSettings.iOS.buildNumber = (int.Parse(oldBuildNumber) + 1).ToString();
+
+        LogColor("Current BuildNumber : " + PlayerSettings.iOS.buildNumber);
     }
     #endregion
 }

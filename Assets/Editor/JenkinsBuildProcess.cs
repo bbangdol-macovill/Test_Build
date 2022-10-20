@@ -135,6 +135,101 @@ namespace BuildProcessor
             process.Close();
         }
 
+        [MenuItem("Tools/CI/Shell Test")]
+        public static void CMDShellTest()
+        {
+            System.Diagnostics.Process process = new();
+
+            string resultValue = string.Empty;
+
+            process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.Exited += delegate (object sender, System.EventArgs e) {
+                UnityEngine.Debug.LogError(e.ToString());
+            };
+
+            process.StartInfo.FileName = "/bin/bash";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            process.StartInfo.Arguments = "-c" + " \"" + "git add Assets/AddressableAssetsData/*" + " \"";
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Add : " + resultValue);
+            process.Close();
+
+            process.StartInfo.Arguments = "-c" + " \"" + "git add ProjectSettings/ProjectSettings.asset" + " \"";
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Add : " + resultValue);
+            process.Close();
+
+            string arguments = "-c" + " \"" + "git commit -m JenkinsiOSBuild_develop_" + PlayerSettings.iOS.buildNumber + " \"";
+            process.StartInfo.Arguments = arguments;
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Commit : " + resultValue);
+            process.Close();
+
+            process.StartInfo.Arguments = "-c" + " \"" + "git push origin develop" + " \"";
+            process.Start();
+            process.WaitForExit();
+            resultValue = process.StandardOutput.ReadToEnd();
+            UnityEngine.Debug.Log("Push : " + resultValue);
+            process.Close();
+        }
+        [MenuItem("Tools/CI/Python Test")]
+        public static void CMDPythonTest()
+        {
+            System.Diagnostics.Process process = new();
+
+            string reopenTerminal = $"tell application \\\"Terminal\\\" to if not (exists window 1) then reopen";
+            string activateTerminal = $"tell application \\\"Terminal\\\" to activate";
+            string toDoScript1 = $"tell application \\\"Terminal\\\" to do script \\\"cd ~/Projects/Test_Project/Tools/PythonScripts\\\" in window 1";
+            string toDoScript2 = $"tell application \\\"Terminal\\\" to do script \\\"python3 -u UploadToGoogleDrive_iOS.py\\\" in window 1";
+            //string osaScript = $"osascript -e \'{reopenTerminal}\' -e \'{activateTerminal}\' -e \'{toDoScript}\' -e \'{endTell}\'";
+            string osaScript = $"osascript -e \'{reopenTerminal}\' -e \'{activateTerminal}\' -e \'{toDoScript1}\' -e \'{toDoScript2}\'";
+            string argument = $" -c \"{osaScript}\"";
+
+            System.Diagnostics.ProcessStartInfo processStartInfo = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                FileName = "/bin/bash",
+                CreateNoWindow = false,
+                Arguments = argument,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true,
+                RedirectStandardError = true
+
+            };
+            process.StartInfo = processStartInfo;
+
+            process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.Exited += delegate (object sender, System.EventArgs e) {
+                UnityEngine.Debug.LogError(e.ToString());
+            };
+
+            process.Start();
+
+            process.WaitForExit();
+            process.Close();
+        }
+
         private static string AddBuildVersion(BuildTarget buildTarget)
         {
             CheckBuildTarget(buildTarget);
@@ -243,11 +338,11 @@ namespace BuildProcessor
             }
 
 
-            var apkName = pathToBuildProject.Split(new[] { '/' }).Last();// apk 파일 이름 얻기
+            var apkName = pathToBuildProject.Split(new[] { '/' }).Last();// apk ???? ???? ????
 
             System.Console.WriteLine("OnAndroidBuildFinish!!" + apkName);
 
-            //Google Drice 업로드 하는 부분. 되던게 갑자기 안되고 있어 다른걸로 대체해야 함.
+            //Google Drice ?????? ???? ????. ?????? ?????? ?????? ???? ???????? ???????? ??.
             //if (File.Exists(pathToBuildProject))
             //{
             //    var apk = new UnityGoogleDrive.Data.File

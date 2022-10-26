@@ -63,7 +63,7 @@ namespace BuildProcessor
             // 1. Build Number Automatically Up
             AddBuildVersion(BuildTarget.iOS);
             BuildOptions opt = BuildOptions.None;
-            GenericBuild(FindEnabledEditorScenes(), $"./Build/IOS/", BuildTarget.iOS, opt);
+            GenericBuild_iOS(FindEnabledEditorScenes(), $"./Build/IOS/", BuildTarget.iOS, opt);
         }
 
         [MenuItem("Tools/CI/Build And Debug")]
@@ -302,6 +302,33 @@ namespace BuildProcessor
             string timestring = string.Format("{0}_{1}", DateTime.Now.ToString("yyyy") + DateTime.Now.ToString("MM") + DateTime.Now.ToString("dd"), DateTime.Now.ToString("HH") + DateTime.Now.ToString("mm") + DateTime.Now.ToString("ss"));
             string target = targetPath + string.Format("/{0}_{1}_{2}.apk", PlayerSettings.productName, PlayerSettings.bundleVersion, timestring);
             BuildPipeline.BuildPlayer(scenes, target, buildTarget, buildOptions);
+        }
+        private static void GenericBuild_iOS(string[] scenes, string targetPath, BuildTarget buildTarget, BuildOptions buildOptions)
+        {
+            // addressable build
+            for (int i = 0; i < AddressableAssetSettingsDefaultObject.Settings.DataBuilders.Count; i++)
+            {
+                var m = AddressableAssetSettingsDefaultObject.Settings.GetDataBuilder(i);
+                if (m.Name == AddressableBuilderName)
+                {
+                    AddressableAssetSettingsDefaultObject.Settings.ActivePlayerDataBuilderIndex = i;
+                    break;
+                }
+            }
+
+            AddressableAssetSettings.BuildPlayerContent();
+
+            // build
+            if (File.Exists(targetPath) == false)
+                Directory.CreateDirectory(targetPath);
+
+            var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(buildTargetGroup, buildTarget);
+
+
+            string timestring = string.Format("{0}_{1}", DateTime.Now.ToString("yyyy") + DateTime.Now.ToString("MM") + DateTime.Now.ToString("dd"), DateTime.Now.ToString("HH") + DateTime.Now.ToString("mm") + DateTime.Now.ToString("ss"));
+            string target = targetPath + string.Format("/{0}_{1}_{2}.apk", PlayerSettings.productName, PlayerSettings.bundleVersion, timestring);
+            //BuildPipeline.BuildPlayer(scenes, target, buildTarget, buildOptions);
         }
 
         private static string[] FindEnabledEditorScenes()

@@ -63,7 +63,7 @@ namespace BuildProcessor
             // 1. Build Number Automatically Up
             AddBuildVersion(BuildTarget.iOS);
             BuildOptions opt = BuildOptions.None;
-            GenericBuild(FindEnabledEditorScenes(), $"./Build/IOS/", BuildTarget.iOS, opt);
+            GenericBuild_iOS(FindEnabledEditorScenes(), $"./Build/IOS/", BuildTarget.iOS, opt);
         }
 
         [MenuItem("Tools/CI/Build And Debug")]
@@ -303,6 +303,32 @@ namespace BuildProcessor
             string target = targetPath + string.Format("/{0}_{1}_{2}.apk", PlayerSettings.productName, PlayerSettings.bundleVersion, timestring);
             BuildPipeline.BuildPlayer(scenes, target, buildTarget, buildOptions);
         }
+        private static void GenericBuild_iOS(string[] scenes, string targetPath, BuildTarget buildTarget, BuildOptions buildOptions)
+        {
+            // addressable build
+            for (int i = 0; i < AddressableAssetSettingsDefaultObject.Settings.DataBuilders.Count; i++)
+            {
+                var m = AddressableAssetSettingsDefaultObject.Settings.GetDataBuilder(i);
+                if (m.Name == AddressableBuilderName)
+                {
+                    AddressableAssetSettingsDefaultObject.Settings.ActivePlayerDataBuilderIndex = i;
+                    break;
+                }
+            }
+
+            AddressableAssetSettings.BuildPlayerContent();
+
+            // build
+            if (File.Exists(targetPath) == false)
+                Directory.CreateDirectory(targetPath);
+
+            var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(buildTargetGroup, buildTarget);
+
+            string timestring = string.Format("{0}_{1}", DateTime.Now.ToString("yyyy") + DateTime.Now.ToString("MM") + DateTime.Now.ToString("dd"), DateTime.Now.ToString("HH") + DateTime.Now.ToString("mm") + DateTime.Now.ToString("ss"));
+            string target = targetPath + string.Format("/{0}_{1}_{2}.apk", PlayerSettings.productName, PlayerSettings.bundleVersion, timestring);
+            //BuildPipeline.BuildPlayer(scenes, target, buildTarget, buildOptions);
+        }
 
         private static string[] FindEnabledEditorScenes()
         {
@@ -380,6 +406,47 @@ namespace BuildProcessor
             //}
 
             EditorApplication.Exit(0);
+        }
+
+        private static void UploadToGoogleDrive_iOS()
+        {
+            System.Diagnostics.Process process = new();
+            System.Diagnostics.ProcessStartInfo processStartInfo = new();
+
+            string reopenTerminal = $"tell application \\\"Terminal\\\" to if not (exists window 1) then reopen";
+            string activateTerminal = $"tell application \\\"Terminal\\\" to activate";
+            string changeDirectory = $"tell application \\\"Terminal\\\" to do script \\\"cd ~/Projects/Test_Project/Tools/PythonScripts\\\" in window 1";
+            string runPhython = $"tell application \\\"Terminal\\\" to do script \\\"python3 -u UploadToGoogleDrive_iOS.py\\\" in window 1";
+            string osaScript = $"osascript -e \'{reopenTerminal}\' -e \'{activateTerminal}\' -e \'{changeDirectory}\' -e \'{runPhython}\'";
+            string argument = $" -c \"{osaScript}\"";
+
+            processStartInfo = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                FileName = "/bin/bash",
+                CreateNoWindow = false,
+                Arguments = argument,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true,
+                RedirectStandardError = true
+
+            };
+            process.StartInfo = processStartInfo;
+
+            process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) {
+                UnityEngine.Debug.LogError(e.Data);
+            };
+            process.Exited += delegate (object sender, System.EventArgs e) {
+                UnityEngine.Debug.LogError(e.ToString());
+            };
+
+            process.Start();
+
+            process.WaitForExit();
+            process.Close();
         }
     }
 }

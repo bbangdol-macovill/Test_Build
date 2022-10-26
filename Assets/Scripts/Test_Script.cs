@@ -292,9 +292,9 @@ public class Test_Script : Singleton<Test_Script>
         string reopenTerminal = $"tell application \\\"Terminal\\\" to if not (exists window 1) then reopen";
         string activateTerminal = $"tell application \\\"Terminal\\\" to activate";
         string changeDirectory = $"tell application \\\"Terminal\\\" to do script \\\"cd ~/Projects/Test_Project\\\" in window 1";
-        string addBundle = $"tell application \\\"Terminal\\\" to do script \\\"git add Assets/AddressableAssetsData/*.*\\\" in window 1";
+        string addBundle = $"tell application \\\"Terminal\\\" to do script \\\"git add Assets/AddressableAssetsData/*\\\" in window 1";
         string addSettings = $"tell application \\\"Terminal\\\" to do script \\\"git add ProjectSettings/ProjectSettings.asset\\\" in window 1";
-        string commit = $"tell application \\\"Terminal\\\" to do script \\\"git commit -m JenkinsiOSBuild_develop\\\" in window 1";
+        string commit = $"tell application \\\"Terminal\\\" to do script \\\"git commit -m JenkinsTestBuild_develop\\\" in window 1";
         string push = $"tell application \\\"Terminal\\\" to do script \\\"git push origin develop\\\" in window 1";
         string osaScript = $"osascript -e \'{reopenTerminal}\' -e \'{activateTerminal}\' -e \'{changeDirectory}\' -e \'{addBundle}\' -e \'{addSettings}\' -e \'{commit}\' -e \'{push}\'";
         string argument = $" -c \"{osaScript}\"";

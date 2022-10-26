@@ -24,7 +24,7 @@ from googleapiclient.http import MediaFileUpload
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 # 빌드파일이 저장되는 경로.
-BuildFiles_Path = '../Assets/oz_client/Build/iOS/build/Release-iphoneos'
+BuildFiles_Path = '../oz_client/Build/iOS/build/Release-iphoneos'
 # 빌드파일 확장자. 테스트.
 TEST_Extention = r"*.plist"
 # 빌드파일 확장자.
@@ -34,7 +34,7 @@ IPA_Extention = r"*.ipa"
 Upload_Folder_ID = '1Mjf5p94DXOl_iqnO8FakVwGu9OyDLUNX'
 
 # 업로드 파일 링크할 슬랙 채널.
-Alarm_Slack_Channel = '#buildcom'
+Alarm_Slack_Channel = '#오즈_빌드'
 
 
 def main():
@@ -54,7 +54,7 @@ def main():
     # 업로드.
     file_link = upload_file_to_google_drive(google_drive, upload_file)
 
-    slack_message(Alarm_Slack_Channel, file_link)
+    # slack_message(Alarm_Slack_Channel, file_link)
 
 
 # Credential 체크.
@@ -171,7 +171,7 @@ def upload_file_to_google_drive(google_drive, upload_file):
 
     print('Finish Upload')
 
-    return 'Uploaded file to ' + format('https://drive.google.com/open?id=' + result.get('id'))
+    return 'Uploaded IPA to ' + format('https://drive.google.com/open?id=' + result.get('id'))
 
 
 # Upload File to Google Drive(chunk).
@@ -227,7 +227,7 @@ def upload_file_to_google_drive_chunk(google_drive, upload_file, chunksize=26214
 # Slack에 메세지 보내기. Http 전송으로 간단하게.
 def slack_message(channel, message):
     # macovill Bot app 토큰.
-    slack_bot_token = "xoxb-957042924785-4090308732051-SRHMAkyHCAQMhoaNgI7LOuLC"
+    slack_bot_token = "xoxb-957042924785-4288315328401-FUUjKBpWLOhv0aWRYwfJF1D1"
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + slack_bot_token

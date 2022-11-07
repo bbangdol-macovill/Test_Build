@@ -35,3 +35,5 @@ targetPath="$sourcePath""../TestCopy"
 # cp.
 cp -R `ls | grep -v '^Shell'` $targetPath
 echo "Build Version : "$1
+
+# Checkout Test
